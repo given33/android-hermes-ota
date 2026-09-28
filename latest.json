@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 4,
-  "versionName": "1.3.2",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.2-vc4/EkkoStudio-1.3.2-vc4.apk",
-  "sha256": "e5f4c17b85205d19600e6b544ac6a005c2188d5c0a49b0f754117516f0bdc708",
+  "versionCode": 8,
+  "versionName": "1.3.6",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.6-vc8/EkkoStudio-1.3.6-vc8.apk",
+  "sha256": "46861c6df876ba8aeab829b478448df184c74ebb9c424a8b9998b6ac4b1e79d0",
   "size": 54216454,
-  "notes": "1.3.1: 后台超长待机、任务完成通知、应用内更新提醒",
+  "notes": "1.3.6：后台超长待机、任务完成通知、应用内更新提醒（首个可用 Android 版）",
   "mandatory": false,
   "publishedAt": "2026-09-28"
 }
