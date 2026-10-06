@@ -5,7 +5,7 @@ on:
       source_sha:
         description: Exact private iOS source commit
         required: true
-        default: b4d92d1ef4a09059b8c53aa53151809121e50778
+        default: 17152eb9453e55305d58dd607a8b4c7d95cbafed
       probe_only:
         description: Verify standard runner availability only
         type: boolean
@@ -103,10 +103,12 @@ jobs:
           mkdir -p delivery
           if test -f "$RUNNER_TEMP/miqi-private-build.log"; then cp "$RUNNER_TEMP/miqi-private-build.log" delivery/ios-build.log; fi
           BRANCH="ios-delivery/run-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
-          git switch --orphan "$BRANCH" > /dev/null 2>&1
           git config user.name 'Miqi iOS Builder'
           git config user.email 'miqi-ios-builder@users.noreply.github.com'
+          export GIT_INDEX_FILE="$RUNNER_TEMP/miqi-delivery.index"
+          git read-tree --empty
           git add -f delivery
-          git commit -qm 'Store private iOS build delivery'
-          git push origin "$BRANCH" > /dev/null 2>&1
+          TREE=$(git write-tree)
+          COMMIT=$(git commit-tree "$TREE" -m 'Store private iOS build delivery')
+          git push origin "$COMMIT:refs/heads/$BRANCH" > /dev/null 2>&1
           echo "Private delivery branch: $BRANCH"
