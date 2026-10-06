@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 8,
-  "versionName": "1.3.6",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.6-vc8/EkkoStudio-1.3.6-vc8.apk",
-  "sha256": "46861c6df876ba8aeab829b478448df184c74ebb9c424a8b9998b6ac4b1e79d0",
-  "size": 54216454,
-  "notes": "1.3.6：后台超长待机、任务完成通知、应用内更新提醒（首个可用 Android 版）",
+  "versionCode": 9,
+  "versionName": "1.3.7",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.7-vc9/MiqiStudio-1.3.7-vc9.apk",
+  "sha256": "487bc910092a4da9afb65974ce948e30a253beceaac32804a49d677411ba2ec1",
+  "size": 49262565,
+  "notes": "米七 Studio 1.3.7：同步 iOS RN 功能，修复键盘输入框、模型组件折叠、后台运行、通知路由、重试、监控和定时自动化。",
   "mandatory": false,
-  "publishedAt": "2026-09-28"
+  "publishedAt": "2026-10-06"
 }
