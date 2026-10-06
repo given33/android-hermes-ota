@@ -1,0 +1,112 @@
+name: Build private Miqi iOS on standard macOS
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact private iOS source commit
+        required: true
+        default: b4d92d1ef4a09059b8c53aa53151809121e50778
+      probe_only:
+        description: Verify standard runner availability only
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  ios:
+    if: github.actor == github.repository_owner
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    steps:
+      - name: Verify macOS and Xcode
+        run: |
+          uname -s
+          xcodebuild -version
+      - uses: actions/checkout@v4
+        if: ${{ !inputs.probe_only }}
+        with:
+          repository: given33/studio-ios-private
+          ref: ${{ inputs.source_sha }}
+          ssh-key: ${{ secrets.MIQI_IOS_TEMP_BUILD_KEY }}
+          path: private-ios
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        if: ${{ !inputs.probe_only }}
+        with:
+          node-version: 24
+      - name: Verify source and shared behavior
+        if: ${{ !inputs.probe_only }}
+        working-directory: private-ios
+        env:
+          EXPECTED_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          npm ci > "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+          npm run typecheck >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+          npm test >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+      - name: Generate iOS app and extensions
+        if: ${{ !inputs.probe_only }}
+        working-directory: private-ios
+        run: |
+          set -euo pipefail
+          npx expo prebuild --platform ios --no-install >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+          node scripts/verify-ios-extensions.cjs >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+          (cd ios && pod install) >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+      - name: Archive the arm64 device application
+        if: ${{ !inputs.probe_only }}
+        working-directory: private-ios
+        run: |
+          set -euo pipefail
+          WORKSPACE=$(find ios -maxdepth 1 -name '*.xcworkspace' -print -quit)
+          PROJECT=$(find ios -maxdepth 1 -name '*.xcodeproj' -print -quit)
+          xcodebuild -list -json -project "$PROJECT" > "$RUNNER_TEMP/miqi-project.json" 2>> "$RUNNER_TEMP/miqi-private-build.log"
+          SCHEME=$(python3 -c 'import json,sys; p=json.load(open(sys.argv[1]))["project"]; print(next(t for t in p["targets"] if t in p["schemes"] and not any(x in t.lower() for x in ("widget","extension","test"))))' "$RUNNER_TEMP/miqi-project.json")
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/MiqiStudio.xcarchive" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' archive >> "$RUNNER_TEMP/miqi-private-build.log" 2>&1
+      - name: Verify and package IPA
+        if: ${{ !inputs.probe_only }}
+        working-directory: private-ios
+        run: |
+          set -euo pipefail
+          APP=$(find "$RUNNER_TEMP/MiqiStudio.xcarchive/Products/Applications" -maxdepth 1 -name '*.app' -print -quit)
+          export MIQI_APP="$APP"
+          python3 - <<'PY'
+          import os,plistlib,subprocess
+          from pathlib import Path
+          app=Path(os.environ['MIQI_APP']);main=plistlib.loads((app/'Info.plist').read_bytes())
+          for bundle in [app,app/'PlugIns/EkkoStudioWidget.appex',app/'PlugIns/expo-sharing-extension.appex']:
+            info=plistlib.loads((bundle/'Info.plist').read_bytes())
+            assert info['DTPlatformName']=='iphoneos'
+            assert info['CFBundleShortVersionString']==main['CFBundleShortVersionString']
+            assert info['CFBundleVersion']==main['CFBundleVersion']
+            assert b'arm64' in subprocess.check_output(['lipo','-info',str(bundle/info['CFBundleExecutable'])])
+          assert (app/'main.jsbundle').stat().st_size>100000
+          PY
+          mkdir -p "$RUNNER_TEMP/miqi-package/Payload" delivery/signing-entitlements
+          cp -R "$APP" "$RUNNER_TEMP/miqi-package/Payload/"
+          VERSION=$(node -p "require('./app.json').expo.version")
+          (cd "$RUNNER_TEMP/miqi-package" && zip -qry "$GITHUB_WORKSPACE/private-ios/delivery/MiqiStudio-$VERSION-unsigned.ipa" Payload)
+          shasum -a 256 "delivery/MiqiStudio-$VERSION-unsigned.ipa" > delivery/SHA256SUMS.txt
+          cp docs/ios-signing.md delivery/README-signing.md
+          find ios -name '*.entitlements' -exec cp {} delivery/signing-entitlements/ \;
+          python3 -c 'import json,os; print(json.dumps({"commit":os.environ["SOURCE_SHA"],"version":"'"$VERSION"'","runner":"macos-26","sdk":"iphoneos","signed":False},indent=2))' > delivery/build-info.json
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+      - name: Store delivery and diagnostics in the private repository
+        if: ${{ always() && !inputs.probe_only }}
+        working-directory: private-ios
+        run: |
+          set -euo pipefail
+          test -d .git
+          mkdir -p delivery
+          if test -f "$RUNNER_TEMP/miqi-private-build.log"; then cp "$RUNNER_TEMP/miqi-private-build.log" delivery/ios-build.log; fi
+          BRANCH="ios-delivery/run-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          git switch --orphan "$BRANCH" > /dev/null 2>&1
+          git config user.name 'Miqi iOS Builder'
+          git config user.email 'miqi-ios-builder@users.noreply.github.com'
+          git add -f delivery
+          git commit -qm 'Store private iOS build delivery'
+          git push origin "$BRANCH" > /dev/null 2>&1
+          echo "Private delivery branch: $BRANCH"
