@@ -101,7 +101,7 @@ jobs:
           set -euo pipefail
           test -d .git
           mkdir -p delivery
-          if test -f "$RUNNER_TEMP/miqi-private-build.log"; then cp "$RUNNER_TEMP/miqi-private-build.log" delivery/ios-build.log; fi
+          if test -f "$RUNNER_TEMP/miqi-private-build.log"; then gzip -c "$RUNNER_TEMP/miqi-private-build.log" > delivery/ios-build.log.gz; fi
           BRANCH="ios-delivery/run-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           git config user.name 'Miqi iOS Builder'
           git config user.email 'miqi-ios-builder@users.noreply.github.com'
@@ -110,5 +110,12 @@ jobs:
           git add -f delivery
           TREE=$(git write-tree)
           COMMIT=$(git commit-tree "$TREE" -m 'Store private iOS build delivery')
-          git push origin "$COMMIT:refs/heads/$BRANCH" > /dev/null 2>&1
-          echo "Private delivery branch: $BRANCH"
+          for ATTEMPT in 1 2 3; do
+            if git push origin "$COMMIT:refs/heads/$BRANCH" > "$RUNNER_TEMP/miqi-delivery-push.log" 2>&1; then
+              echo "Private delivery branch: $BRANCH"
+              exit 0
+            fi
+            cat "$RUNNER_TEMP/miqi-delivery-push.log"
+            if test "$ATTEMPT" != 3; then sleep 15; fi
+          done
+          exit 1
