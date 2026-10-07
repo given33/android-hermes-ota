@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 18,
+  "versionCode": 20,
   "versionName": "1.3.11",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.11-vc18/MiqiStudio-1.3.11-vc18.apk",
-  "sha256": "788f0836e6abebdd5ab8c06a71c7cad998357a266c8999b3ab3081c61e468b79",
-  "size": 49293861,
-  "notes": "修复断网恢复凭据丢失和重试弹窗、恢复工具记录重复、终端逐字输入重复和键盘焦点；同步输入框、思考组件、任务计划、照片文件与七天多设备登录。K20 Pro 已验证自动恢复、单次工具、终端连续命令和删除键。",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.11-vc20/MiqiStudio-1.3.11-vc20.apk",
+  "sha256": "837bb1d4a0301b04c2cc13a0c990a9063238307bb70ce707821a50464d9c055d",
+  "size": 48866410,
+  "notes": "米七 Studio 新图标；修复 Profile 创建和重命名后目录缓存、客户端 Profile 切换，避免重置其他会话任务；修复语音提供商小屏卡片裁切。K20 Pro 已验证覆盖升级、图标、Profile 全流程、前后台所选 Profile 保留、语音卡片与消息复制引用。",
   "mandatory": false,
   "publishedAt": "2026-10-07"
 }
