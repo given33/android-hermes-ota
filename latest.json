@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 13,
-  "versionName": "1.3.10",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.10-vc13/MiqiStudio-1.3.10-vc13.apk",
-  "sha256": "8805d16ff69ee326af0be45a42ee3cdc641b355c9e84b13499f29d7ef6341d55",
-  "size": 49291721,
-  "notes": "修复系统照片和文件选择、多行输入自动增高、思考组件原宽度、仅实时思考时滚动、任务计划逐步更新与完成隐藏、前台会话恢复、通知重试、多设备七天登录及记住账号密码。",
+  "versionCode": 17,
+  "versionName": "1.3.11",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.11-vc17/MiqiStudio-1.3.11-vc17.apk",
+  "sha256": "c70aac56fdd8c18d5e410c91f739aadf06d4f9c1555b8d83e6815b2b0cc7886a",
+  "size": 49292889,
+  "notes": "修复断网恢复时设备认证凭据丢失、重试弹窗卡住和恢复工具记录重复；后台任务持续执行，重连不重发任务。同步多行输入、思考组件、任务计划、照片与文件选择和七天多设备登录。减少历史预读争用，首段思考和回复立即显示。K20 Pro 已验证断网自动恢复、工具计数和完成结果。",
   "mandatory": false,
   "publishedAt": "2026-10-07"
 }
