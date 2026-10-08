@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 24,
-  "versionName": "1.3.14",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.14-vc24/MiqiStudio-1.3.14-vc24.apk",
-  "sha256": "616b7c5ab7d3f3e14a223a1acd78f0b25750e2dfc5a37c1083bdc1ac543ad3f2",
-  "size": 48923218,
-  "notes": "成员新增名字、头像、计时和完整任务过程；退出重开恢复成员；支持主代理调整方向、复用成员及静默等待回报，等待期间可继续发任务；修复详情返回卡死与加载完成时漏读最终记录。",
+  "versionCode": 25,
+  "versionName": "1.3.15",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.15-vc25/MiqiStudio-1.3.15-vc25.apk",
+  "sha256": "f56856e3a79f7828f93fafaec9abf59cb793c09d92c4a981199281b2d96b0a3b",
+  "size": 48937198,
+  "notes": "成员协作事件按时间顺序分组展示；英文成员名称；主代理与子代理共用完整执行过程；修复成员恢复与返回卡顿；图片缩略图缓存；共享媒体流窗口并保持控制响应；已授权局域网原生文件下载。",
   "mandatory": false,
   "publishedAt": "2026-10-08"
 }
