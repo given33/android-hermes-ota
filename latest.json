@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 25,
-  "versionName": "1.3.15",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.15-vc25/MiqiStudio-1.3.15-vc25.apk",
-  "sha256": "f56856e3a79f7828f93fafaec9abf59cb793c09d92c4a981199281b2d96b0a3b",
-  "size": 48937198,
-  "notes": "成员协作事件按时间顺序分组展示；英文成员名称；主代理与子代理共用完整执行过程；修复成员恢复与返回卡顿；图片缩略图缓存；共享媒体流窗口并保持控制响应；已授权局域网原生文件下载。",
+  "versionCode": 26,
+  "versionName": "1.3.16",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.16-vc26/MiqiStudio-1.3.16-vc26.apk",
+  "sha256": "3d708eb32c209a3663804c725cd892e15451b232ad7697fbbd2d98e43426e3f9",
+  "size": 49352022,
+  "notes": "优化图片和文件的国内媒体连接；恢复后自动预热媒体入口；原生二进制上传减少复制开销；连接断开及时取消传输；更新浅色和深色图标。Android 真机已验证完整 16 MiB 上传和下载校验。",
   "mandatory": false,
   "publishedAt": "2026-10-08"
 }
