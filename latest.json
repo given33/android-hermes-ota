@@ -2,12 +2,12 @@
   "schema": 1,
   "platform": "android",
   "package": "ai.ekko.studio",
-  "versionCode": 22,
-  "versionName": "1.3.12",
-  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.12-vc22/MiqiStudio-1.3.12-vc22.apk",
-  "sha256": "8dbf767f0df2486fdc5477134d43c73157d4e2bcc7dea42610f96aa548d51f7b",
-  "size": 48873286,
-  "notes": "修复流式回复时页面闪烁、输入框布局和网页链接点击；加快首字显示与会话预热；支持模型图片、二维码和后台监控结果汇报",
+  "versionCode": 23,
+  "versionName": "1.3.13",
+  "apkUrl": "https://github.com/given33/android-hermes-ota/releases/download/v1.3.13-vc23/MiqiStudio-1.3.13-vc23.apk",
+  "sha256": "bd4228b3c3aa11ddd6499489358b5c35085314fd80bf1c3edcf6716a6b20f4d1",
+  "size": 48918330,
+  "notes": "1.3.13：修复流式回复与输入时页面跳动；支持模型链接在系统浏览器打开、图片与二维码预览、后台监控结果回到原聊天。语音录入提前预热，重开软件优先恢复本地聊天并继续同步。文件传输使用独立通道与有界并行分片，减少传文件时聊天响应被阻塞。已在真机验证恢复、录音及16 MB文件上传完整性。",
   "mandatory": false,
   "publishedAt": "2026-10-08"
 }
